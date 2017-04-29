@@ -7,7 +7,7 @@ import os
 client = MongoClient('mongodb://10.131.137.188:27017')
 db = client['grupo_03']
 db.authenticate('user1','eafit.2017')
-tests = db.tests
+tests = db.tests2
 
 class InvIndex(MRJob):
 
@@ -36,12 +36,13 @@ class InvIndex(MRJob):
 				i = files.index(s[0])
 			except ValueError:
 				files.append(s[0])
-				freqs.append(s[1])
+				freqs.append(int(s[1]))
 			else:
 				x = int(freqs[i])
 				y = int(s[1])
-				freqs[i] = str(x+y)
+				freqs[i] = x+y
 		tuples = zip(files,freqs)
+		tuples.sort(key=lambda x: x[1], reverse=True)
 		tests.insert_one({'_id': key, 'data':  tuples})
 		yield key, tuples
 	
