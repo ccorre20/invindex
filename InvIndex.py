@@ -1,4 +1,5 @@
 from mrjob.job import MRJob
+from mrjob.protocol import TextValueProtocol
 from pymongo import MongoClient
 import re
 import string
@@ -10,10 +11,14 @@ db.authenticate('user1','eafit.2017')
 tests = db.tests2
 
 class InvIndex(MRJob):
+	
+	INPUT_PROTOCOL = TextValueProtocol
 
 	def mapper(self, _, line):
-		line = re.sub(r'\d+', '', line)
-		line = line.translate(string.maketrans("",""), string.punctuation)
+		#line = re.sub(r'\d+', '', line, 'flags=re.UNICODE')
+		line = ''.join([i for i in line if not i.isdigit()])
+		line = line.encode('utf-8').translate(None, string.punctuation)
+		#line = line.translate(string.maketrans("",""), string.punctuation)
 		words = line.split()
 		try:
     			file_in = os.environ['mapreduce_map_input_file']
