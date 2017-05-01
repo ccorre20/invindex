@@ -8,7 +8,7 @@ import os
 client = MongoClient('mongodb://10.131.137.188:27017')
 db = client['grupo_03']
 db.authenticate('user1','eafit.2017')
-tests = db.tests2
+tests = db.indexes
 
 class InvIndex(MRJob):
 	
